@@ -190,7 +190,7 @@ sub generateHTML {
         } elsif ( $line =~ /\{content\}/ ) {
             print( GREEN "* Incorporating content\n" );
             opendir( my $images, $imageDir ) or die $!;
-            my @files = sort { $a <=> $b } readdir( $images );
+            my @files = sort {(stat "$imageDir/$a")[10] cmp (stat "$imageDir/$b")[10]} readdir( $images );
             closedir( $images );
     
             my $counter = 0;
@@ -240,7 +240,7 @@ sub generateHTML {
             }
         # Load exif informations
         } elsif ( $line =~ /\{exif\}/ ) {
-            print( GREEN "* Parsing EXIF\n" );
+            print( GREEN "* Parsing EXIF " );
             opendir( my $images, $imageDir ) or die $!;
             my @files = readdir( $images );
             closedir( $images );
@@ -255,19 +255,20 @@ sub generateHTML {
             my $counter = 0;
             for my $file ( @files ) {
                 if ( $file =~ /.*\.(?:JPG|jpg|jpeg|PNG|png)/ ) {
+                    print( "." );
                     my $a = `identify -format "%[EXIF:*]" $imageDir/$file`;
                     my @exif = split(/[\r\n]/, $a);
 #                     print( Dumper( @exif ));
                     print( OUTPUT "<table class='exif' id='$counter' style='display: none'>" );
                     for my $entry ( @exif ) {
-                        if ( $entry =~ /exif:(?<key>.*)=(?<value>.*)/ ) {
+                        if ( $entry =~ /exif:(?<key>.*)=(?<value>[a-zA-Z0-9\/]*|.*)/ ) {
                             if ( grep( /^$+{key}$/, @keyBlackList )) {
                                 next;
                             }
                             my $key = $+{key};
-                            $key =~ s/Value//g;
+#                             $key =~ s/Value//g;
                             if ( !defined( $+{value})) {
-                                print( RED "Invalid entry: $entry\n" );
+                                print( RED "Invalid value for entry with key=$key : $entry\n" );
                             } else {
                                 print( OUTPUT "<tr><td class='key'>$key</td><td class='value'>$+{value}</td></tr>" );
                             }
@@ -279,6 +280,7 @@ sub generateHTML {
                     $counter++;
                 }
             }
+            print( "\n" );
         } elsif ( $line =~ /\{properties\}/ ) {
             print( GREEN "* Filling in file properties\n" );
             opendir( my $images, $imageDir ) or die $!;
