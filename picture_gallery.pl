@@ -95,9 +95,9 @@ sub wanted {
 sub generateThumbs {
     my ( $imageDir ) = @_;
     print( BLUE "-> Generating thumbs for $imageDir : " );
-    opendir my $images, $imageDir or die $!;
-    my @files = readdir $images;
-    closedir $images;
+    opendir( my $images, $imageDir ) or die $!;
+    my @files = readdir( $images );
+    closedir( $images );
 
     # Create thumbs directory if it does not already exists
     unless ( -d "$imageDir/thumbs" ) {
@@ -189,17 +189,17 @@ sub generateHTML {
             print( OUTPUT "<a class='breadcrumb_link_current' href='./index.html'>$current</a>" );
         } elsif ( $line =~ /\{content\}/ ) {
             print( GREEN "* Incorporating content\n" );
-            opendir my $images, $imageDir or die $!;
-            my @files = readdir $images;
-            closedir $images;
+            opendir( my $images, $imageDir ) or die $!;
+            my @files = sort { $a <=> $b } readdir( $images );
+            closedir( $images );
     
             my $counter = 0;
             for my $file ( @files ) {
                 # If we have a subfolder
                 if ( -d $file && $file ne "." && $file ne ".." && $file ne "thumbs" ) {
                     # Take the first image as preview of the gallery
-                    opendir my $subImages, $imageDir . "/" . $file or die $!;
-                    my @subFiles = readdir $subImages;
+                    opendir( my $subImages, $imageDir . "/" . $file ) or die $!;
+                    my @subFiles = readdir( $subImages );
                     my $preview;
                     for my $subFile ( @subFiles ) {
                         if ( $subFile =~ /.*\.(?:JPG|jpg|jpeg|PNG|png)/ ) {
@@ -207,7 +207,7 @@ sub generateHTML {
                             last;
                         }
                     }
-                    closedir $subImages;
+                    closedir( $subImages );
                     
                     print( OUTPUT "<div class='outer_frame' id='outer_frame$counter'>
                           <div class='img_frame_gallery' id='$counter'></div>
@@ -241,9 +241,9 @@ sub generateHTML {
         # Load exif informations
         } elsif ( $line =~ /\{exif\}/ ) {
             print( GREEN "* Parsing EXIF\n" );
-            opendir my $images, $imageDir or die $!;
-            my @files = readdir $images;
-            closedir $images;
+            opendir( my $images, $imageDir ) or die $!;
+            my @files = readdir( $images );
+            closedir( $images );
             my @keyBlackList = ( "ComponentsConfiguration", "MakerNote", 
                                  "thumbnail:.InteroperabilityIndex", 
                                  "thumbnail:Compression", 
@@ -281,9 +281,9 @@ sub generateHTML {
             }
         } elsif ( $line =~ /\{properties\}/ ) {
             print( GREEN "* Filling in file properties\n" );
-            opendir my $images, $imageDir or die $!;
-            my @files = readdir $images;
-            closedir $images;
+            opendir( my $images, $imageDir ) or die $!;
+            my @files = readdir( $images );
+            closedir( $images );
             my $counter = 0;
             for my $file ( @files ) {
                 if ( $file =~ /.*\.(?:JPG|jpg|jpeg|PNG|png)/ ) {
