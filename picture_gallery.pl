@@ -190,7 +190,7 @@ sub generateHTML {
         } elsif ( $line =~ /\{content\}/ ) {
             print( GREEN "* Incorporating content\n" );
             opendir( my $images, $imageDir ) or die $!;
-            my @files = sort {(stat "$imageDir/$a")[10] cmp (stat "$imageDir/$b")[10]} readdir( $images );
+            my @files = sort {(stat "$imageDir/$a")[9] <=> (stat "$imageDir/$b")[9]} readdir( $images );
             closedir( $images );
     
             my $counter = 0;
@@ -255,7 +255,6 @@ sub generateHTML {
             my $counter = 0;
             for my $file ( @files ) {
                 if ( $file =~ /.*\.(?:JPG|jpg|jpeg|PNG|png)/ ) {
-                    print( "." );
                     my $a = `identify -format "%[EXIF:*]" $imageDir/$file`;
                     my @exif = split(/[\r\n]/, $a);
 #                     print( Dumper( @exif ));
