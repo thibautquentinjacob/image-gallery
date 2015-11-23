@@ -199,7 +199,7 @@ sub generateHTML {
                 if ( -d $file && $file ne "." && $file ne ".." && $file ne "thumbs" ) {
                     # Take the first image as preview of the gallery
                     opendir( my $subImages, $imageDir . "/" . $file ) or die $!;
-                    my @subFiles = readdir( $subImages );
+                    my @subFiles = sort {(stat "$imageDir/$a")[9] <=> (stat "$imageDir/$b")[9]} readdir( $subImages );
                     my $preview;
                     for my $subFile ( @subFiles ) {
                         if ( $subFile =~ /.*\.(?:JPG|jpg|jpeg|PNG|png)/ ) {
