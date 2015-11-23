@@ -176,7 +176,7 @@ sub generateHTML {
                 # If we are at root level
                 if ( $dir eq $root && !$reachedRoot ) {
                     $reachedRoot = 1;
-                    print( OUTPUT "<a class='breadcrumb_link' href='$dirs[0]/index.html'>$dir</a>" );
+                    print( OUTPUT "<a class='breadcrumb_link' href='/'>$dir</a>" );
                 }
                 if ( $reachedRoot && $dir ne $current && $dir ne $root ) {
                     print( OUTPUT "<a class='breadcrumb_link' href='$dirs[0]/$dir/index.html'>$dir</a>" );
