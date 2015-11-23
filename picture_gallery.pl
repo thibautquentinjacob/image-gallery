@@ -242,7 +242,7 @@ sub generateHTML {
         } elsif ( $line =~ /\{exif\}/ ) {
             print( GREEN "* Parsing EXIF " );
             opendir( my $images, $imageDir ) or die $!;
-            my @files = readdir( $images );
+            my @files = sort {(stat "$imageDir/$a")[9] <=> (stat "$imageDir/$b")[9]} readdir( $images );
             closedir( $images );
             my @keyBlackList = ( "ComponentsConfiguration", "MakerNote", 
                                  "thumbnail:.InteroperabilityIndex", 
@@ -283,7 +283,7 @@ sub generateHTML {
         } elsif ( $line =~ /\{properties\}/ ) {
             print( GREEN "* Filling in file properties\n" );
             opendir( my $images, $imageDir ) or die $!;
-            my @files = readdir( $images );
+            my @files = sort {(stat "$imageDir/$a")[9] <=> (stat "$imageDir/$b")[9]} readdir( $images );
             closedir( $images );
             my $counter = 0;
             for my $file ( @files ) {
