@@ -82,7 +82,7 @@ sub wanted {
     if ( -d $File::Find::name && $_ ne "thumbs" ) {
         my @splits = split( "/", $File::Find::name );
         generateThumbs( $File::Find::name );
-        generateHTML(   $File::Find::name, $splits[@splits-1] );
+        generateHTML(   $File::Find::name, $name );
     }
 }
 
@@ -176,7 +176,7 @@ sub generateHTML {
                 # If we are at root level
                 if ( $dir eq $root && !$reachedRoot ) {
                     $reachedRoot = 1;
-                    print( OUTPUT "<a class='breadcrumb_link' href='/'>$dir</a>" );
+                    print( OUTPUT "<a class='breadcrumb_link' href='/'>$name</a>" );
                 }
                 if ( $reachedRoot && $dir ne $current && $dir ne $root ) {
                     print( OUTPUT "<a class='breadcrumb_link' href='$dirs[0]/$dir/index.html'>$dir</a>" );
@@ -199,7 +199,7 @@ sub generateHTML {
                 if ( -d $file && $file ne "." && $file ne ".." && $file ne "thumbs" ) {
                     # Take the first image as preview of the gallery
                     opendir( my $subImages, $imageDir . "/" . $file ) or die $!;
-                    my @subFiles = sort {(stat "$imageDir/$a")[9] <=> (stat "$imageDir/$b")[9]} readdir( $subImages );
+                    my @subFiles = sort {(stat "$imageDir/$file/$a")[9] <=> (stat "$imageDir/$file/$b")[9]} readdir( $subImages );
                     my $preview;
                     for my $subFile ( @subFiles ) {
                         if ( $subFile =~ /.*\.(?:JPG|jpg|jpeg|PNG|png)/ ) {

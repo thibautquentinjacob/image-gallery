@@ -337,13 +337,24 @@ div.drawer .selected {
     left: -1px;
 }
 
-div.drawer table {
+div.drawer .properties.selected {
+    z-index: 5;
+    position: relative;
+    border-top: none;
+    background: rgba( 255, 255, 255, 0.1 );
+    border-radius: 0 0 3px 3px; 
+    border: 1px solid rgba( 255, 255, 255, 0.1 ); 
+//    top: -3px;
+    left: 1px;
+}
+
+div.drawer table tbody {
     font-size: 0.9em;
     position: relative; 
     top: 20px;
-    overflow: scroll;
-    table-layout: fixed;
     width: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 div.drawer table td.key {
